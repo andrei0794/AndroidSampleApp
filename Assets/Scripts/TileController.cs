@@ -5,6 +5,7 @@ using UnityEngine;
 public class TileController : MonoBehaviour {
 
     public bool done;
+    public int direction; /* 1 - right, 2 - left*/
 
     private GameObject floor;
     private BoxCollider2D floorBC;
@@ -13,12 +14,18 @@ public class TileController : MonoBehaviour {
 
     private Vector3 destination;
 
+    private Rigidbody2D tileRB;
+    private BoxCollider2D tileBC;
+
     // Use this for initialization
     void Start () {
         floor = GameObject.Find("Floor");
         floorBC = floor.GetComponent<BoxCollider2D>();
 
         done = false;
+
+        tileRB = GetComponent<Rigidbody2D>();
+        tileBC = GetComponent<BoxCollider2D>();
 
         gc = GameObject.Find("GameController").GetComponent<GameController>();
 
@@ -36,12 +43,31 @@ public class TileController : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
-        transform.position = Vector3.MoveTowards(transform.position, destination, 5 * Time.deltaTime);
-
-        if (transform.position == destination)
+        if (done == false)
         {
+            //transform.position = Vector3.MoveTowards(transform.position, destination, 5 * Time.deltaTime);
+            if (direction == 1)
+            {
+                tileRB.velocity = transform.right * 5;
+            }
+            else if (direction == 2)
+            {
+                tileRB.velocity = - transform.right * 5;
+            }
+            if ( tileBC.IsTouching(GameObject.Find("Player").GetComponent<BoxCollider2D>()) )
+            {
+                tileRB.velocity = new Vector2(0, 0);
+                done = true;
+            }
+        }
+    }
+    /*
+    void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject == GameObject.Find("Player"))
+        {
+            tileRB.velocity = new Vector2(0, 0);
             done = true;
         }
-
-    }
+    }*/
 }

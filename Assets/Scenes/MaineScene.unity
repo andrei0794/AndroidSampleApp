@@ -223,8 +223,8 @@ Rigidbody2D:
   m_Material: {fileID: 0}
   m_Interpolate: 0
   m_SleepingMode: 1
-  m_CollisionDetection: 0
-  m_Constraints: 4
+  m_CollisionDetection: 1
+  m_Constraints: 5
 --- !u!212 &979603967
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -294,7 +294,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1a5515ff67d946447b9f1da42b4bef53, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isGrounded: 1
 --- !u!1 &1100738845
 GameObject:
   m_ObjectHideFlags: 0
@@ -432,6 +431,15 @@ Prefab:
     - target: {fileID: 212083393614752058, guid: baac315539f83bb4abd125160d2272ce,
         type: 2}
       propertyPath: m_Color.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4683779848233538, guid: baac315539f83bb4abd125160d2272ce, type: 2}
+      propertyPath: m_LocalScale.x
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 50843826250777490, guid: baac315539f83bb4abd125160d2272ce,
+        type: 2}
+      propertyPath: m_Simulated
       value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents:
