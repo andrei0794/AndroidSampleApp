@@ -1,0 +1,8 @@
+.vs/
+Library/
+obj/
+Temp/
+*.userprefs
+*.csproj
+*.sln
+UnityPackageManager/
