@@ -16,13 +16,14 @@ public class PlayerController : MonoBehaviour {
         _cataBC = GetComponent<BoxCollider2D>();
 
         isGrounded = true;
+
     }
 	
 	// Update is called once per frame
 	void Update () {
         if (isGrounded && Input.GetMouseButtonDown(0))
         {
-            _cata.AddForce(new Vector2(0, 20), ForceMode2D.Impulse);
+            _cata.AddForce(new Vector2(0, 2), ForceMode2D.Impulse);
         }
 	}
 

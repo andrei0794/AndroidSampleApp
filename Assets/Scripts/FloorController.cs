@@ -4,8 +4,6 @@ using UnityEngine;
 
 public class FloorController : MonoBehaviour {
 
-    public bool done;
-
 	// Use this for initialization
 	void Start () {
 		
