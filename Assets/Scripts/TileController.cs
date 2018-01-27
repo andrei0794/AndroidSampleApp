@@ -57,6 +57,8 @@ public class TileController : MonoBehaviour {
             if ( tileBC.IsTouching(GameObject.Find("Player").GetComponent<BoxCollider2D>()) )
             {
                 tileRB.velocity = new Vector2(0, 0);
+                tileRB.bodyType = RigidbodyType2D.Dynamic;
+                tileRB.gravityScale = 0.5f;
                 done = true;
             }
         }
