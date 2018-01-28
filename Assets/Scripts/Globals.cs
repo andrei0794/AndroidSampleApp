@@ -4,10 +4,12 @@ using UnityEngine;
 
 public class Globals : MonoBehaviour {
 
+    public static float minX, maxX, minY, maxY;
+
 	// Use this for initialization
 	void Start () {
-		
-	}
+
+    }
 	
 	// Update is called once per frame
 	void Update () {

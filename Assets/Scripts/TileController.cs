@@ -68,6 +68,7 @@ public class TileController : MonoBehaviour {
             }
             if ( tileBC.IsTouching(GameObject.Find("Player").GetComponent<BoxCollider2D>()) )
             {
+              
                 tileRB.velocity = new Vector2(0, 0);
                // tileRB.bodyType = RigidbodyType2D.Dynamic;
               //  tileRB.gravityScale = 1f;
@@ -75,6 +76,9 @@ public class TileController : MonoBehaviour {
                 //Destroy(tileRB);
                 //transform.parent = GameObject.Find("Tower").transform;
                 done = true;
+               if (GameObject.Find("Player").transform.position.y >= Camera.main.transform.position.y)
+                Camera.main.transform.position = new Vector3(Camera.main.transform.position.x, transform.position.y, Camera.main.transform.position.z);
+                Debug.Log("TRUE\n");
             }
         }
     }

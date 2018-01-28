@@ -7,7 +7,6 @@ public class GameController : MonoBehaviour {
 
     
     public int i;
-    private float minX, maxX, minY, maxY;
 
     public GameObject tile;
     public GameObject lastTile;
@@ -23,17 +22,17 @@ public class GameController : MonoBehaviour {
         Vector2 bottomCorner = Camera.main.ViewportToWorldPoint(new Vector3(0, 0, camDistance));
         Vector2 topCorner = Camera.main.ViewportToWorldPoint(new Vector3(1, 1, camDistance));
 
-        minX = bottomCorner.x;
-        maxX = topCorner.x;
-        minY = bottomCorner.y;
-        maxY = topCorner.y;
+        Globals.minX = bottomCorner.x;
+        Globals.maxX = topCorner.x;
+        Globals.minY = bottomCorner.y;
+        Globals.maxY = topCorner.y;
 
         lastTileBC = lastTile.GetComponent<BoxCollider2D>();
         lastTileRB = lastTile.GetComponent<Rigidbody2D>();
 
         i = 0;
 
-        Vector2 spawnPosition = new Vector2(minX, lastTile.transform.position.y + lastTileBC.bounds.size.y);
+        Vector2 spawnPosition = new Vector2(Globals.minX, lastTile.transform.position.y + lastTileBC.bounds.size.y);
         Quaternion spawnRotation = new Quaternion(0, 0, 0, 0);
         lastTile = Instantiate(tile, spawnPosition, spawnRotation);
         lastTile.GetComponent<TileController>().direction = 1;
@@ -56,12 +55,12 @@ public class GameController : MonoBehaviour {
         {
             if (Random.Range(0.0f, 1.0f) > 0.5f)
             {
-                spawnPosition = new Vector2(minX, lastTile.transform.position.y + lastTileBC.bounds.size.y);
+                spawnPosition = new Vector2(Globals.minX, lastTile.transform.position.y + lastTileBC.bounds.size.y);
                 directionLocal = 1;
             }
             else
             {
-                spawnPosition = new Vector2(maxX, lastTile.transform.position.y + lastTileBC.bounds.size.y);
+                spawnPosition = new Vector2(Globals.maxX, lastTile.transform.position.y + lastTileBC.bounds.size.y);
                 directionLocal = 2;
             }
             Quaternion spawnRotation = new Quaternion(0, 0, 0, 0);
