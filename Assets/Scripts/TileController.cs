@@ -17,6 +17,9 @@ public class TileController : MonoBehaviour {
     private Rigidbody2D tileRB;
     private BoxCollider2D tileBC;
 
+    private float speed;
+    private int last_count;
+
     // Use this for initialization
     void Start () {
         floor = GameObject.Find("Floor");
@@ -38,21 +41,30 @@ public class TileController : MonoBehaviour {
             BoxCollider2D lastTileBC = gc.lastTile.GetComponent<BoxCollider2D>();
             destination = new Vector3(floor.transform.position.x, gc.lastTile.transform.position.y , 0);
         }
+
+        speed = 2;
+        last_count = 0;
     }
 	
 	// Update is called once per frame
 	void Update () {
+
+        if (gc.i > last_count + 5)
+        {
+            last_count = gc.i;
+            speed = speed + 0.4f;
+        }
 
         if (done == false)
         {
             //transform.position = Vector3.MoveTowards(transform.position, destination, 5 * Time.deltaTime);
             if (direction == 1)
             {
-                tileRB.velocity = transform.right * 5;
+                tileRB.velocity = transform.right * Random.Range(speed - 1, speed + 1);
             }
             else if (direction == 2)
             {
-                tileRB.velocity = - transform.right * 5;
+                tileRB.velocity = - transform.right * Random.Range(speed - 1, speed + 1);
             }
             if ( tileBC.IsTouching(GameObject.Find("Player").GetComponent<BoxCollider2D>()) )
             {
