@@ -35,6 +35,7 @@ public class GameController : MonoBehaviour {
         Vector2 spawnPosition = new Vector2(minX, lastTile.transform.position.y + lastTileBC.bounds.size.y);
         Quaternion spawnRotation = new Quaternion(0, 0, 0, 0);
         lastTile = Instantiate(tile, spawnPosition, spawnRotation);
+        lastTile.GetComponent<TileController>().direction = 1;
         i++;
 
     }
@@ -44,19 +45,23 @@ public class GameController : MonoBehaviour {
 
         lastTilePC = lastTile.GetComponent<TileController>();
         Vector2 spawnPosition;
+        int directionLocal;
 
         if (lastTilePC.done == true)
         {
             if (Random.Range(0.0f, 1.0f) > 0.5f)
             {
                 spawnPosition = new Vector2(minX, lastTile.transform.position.y + lastTileBC.bounds.size.y);
+                directionLocal = 1;
             }
             else
             {
                 spawnPosition = new Vector2(maxX, lastTile.transform.position.y + lastTileBC.bounds.size.y);
+                directionLocal = 2;
             }
             Quaternion spawnRotation = new Quaternion(0, 0, 0, 0);
             lastTile = Instantiate(tile, spawnPosition, spawnRotation);
+            lastTile.GetComponent<TileController>().direction = directionLocal;
             i++;
         }
     }
