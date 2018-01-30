@@ -76,12 +76,12 @@ public class TileController : MonoBehaviour {
             {
                 tileRB.velocity = Vector2.zero;
                 //tileRB.angularVelocity = 0f;
-                tileRB.bodyType = RigidbodyType2D.Dynamic;
-                tileRB.velocity = Vector2.zero;
-                tileRB.angularVelocity = 0f;
+                //tileRB.bodyType = RigidbodyType2D.Dynamic;
+                //tileRB.velocity = Vector2.zero;
+                //tileRB.angularVelocity = 0f;
                 //tileRB.constraints = RigidbodyConstraints2D.FreezePositionY | RigidbodyConstraints2D.FreezeRotation;
-                tileRB.gravityScale = 1;
-                tileRB.mass = 1;
+                //tileRB.gravityScale = 1;
+                //tileRB.mass = 1;
                 /*Destroy(tileRB);
                 towerRB.bodyType = RigidbodyType2D.Kinematic;
                 transform.parent = GameObject.Find("Tower").transform;
