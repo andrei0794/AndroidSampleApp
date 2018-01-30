@@ -4,10 +4,6 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class GameController : MonoBehaviour {
-
-    
-    public int i;
-
     public GameObject tile;
     public GameObject lastTile;
     private TileController lastTilePC;
@@ -17,6 +13,9 @@ public class GameController : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
+
+        Globals.gameOver = false;
+        Globals.tileCounter = 0;
 
         float camDistance = Vector3.Distance(transform.position, Camera.main.transform.position);
         Vector2 bottomCorner = Camera.main.ViewportToWorldPoint(new Vector3(0, 0, camDistance));
@@ -29,14 +28,12 @@ public class GameController : MonoBehaviour {
 
         lastTileBC = lastTile.GetComponent<BoxCollider2D>();
         lastTileRB = lastTile.GetComponent<Rigidbody2D>();
-
-        i = 0;
-
+        
         Vector2 spawnPosition = new Vector2(Globals.minX, lastTile.transform.position.y + lastTileBC.bounds.size.y);
         Quaternion spawnRotation = new Quaternion(0, 0, 0, 0);
         lastTile = Instantiate(tile, spawnPosition, spawnRotation);
         lastTile.GetComponent<TileController>().direction = 1;
-        i++;
+        Globals.tileCounter++;
 
     }
 
@@ -47,11 +44,12 @@ public class GameController : MonoBehaviour {
         {
             SceneManager.LoadScene(0);
         }
+
         lastTilePC = lastTile.GetComponent<TileController>();
         Vector2 spawnPosition;
         int directionLocal;
 
-        if (lastTilePC.done == true)
+        if (lastTilePC.done == true && !Globals.gameOver)
         {
             if (Random.Range(0.0f, 1.0f) > 0.5f)
             {
@@ -66,7 +64,12 @@ public class GameController : MonoBehaviour {
             Quaternion spawnRotation = new Quaternion(0, 0, 0, 0);
             lastTile = Instantiate(tile, spawnPosition, spawnRotation);
             lastTile.GetComponent<TileController>().direction = directionLocal;
-            i++;
+            Globals.tileCounter++;
+        }
+
+        if (Globals.gameOver)
+        {
+            UnityEngine.Advertisements.Advertisement.Show();
         }
     }
 }

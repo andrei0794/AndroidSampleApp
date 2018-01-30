@@ -20,6 +20,9 @@ public class TileController : MonoBehaviour {
     private float speed;
     private int last_count;
 
+    private GameObject tower;
+    private Rigidbody2D towerRB;
+
     // Use this for initialization
     void Start () {
         floor = GameObject.Find("Floor");
@@ -32,7 +35,7 @@ public class TileController : MonoBehaviour {
 
         gc = GameObject.Find("GameController").GetComponent<GameController>();
 
-        if (gc.i == 0)
+        if (Globals.tileCounter == 0)
         {
             destination = new Vector3(floor.transform.position.x, floor.transform.position.y , 0);
         }
@@ -44,18 +47,21 @@ public class TileController : MonoBehaviour {
 
         speed = 2;
         last_count = 0;
+
+        tower = GameObject.Find("Tower");
+        towerRB = GetComponent<Rigidbody2D>();
     }
 	
 	// Update is called once per frame
 	void Update () {
 
-        if (gc.i > last_count + 5)
+        if (Globals.tileCounter > last_count + 5)
         {
-            last_count = gc.i;
+            last_count = Globals.tileCounter;
             speed = speed + 0.4f;
         }
 
-        if (done == false)
+        if (done == false && !Globals.gameOver)
         {
             //transform.position = Vector3.MoveTowards(transform.position, destination, 5 * Time.deltaTime);
             if (direction == 1)
@@ -68,18 +74,25 @@ public class TileController : MonoBehaviour {
             }
             if ( tileBC.IsTouching(GameObject.Find("Player").GetComponent<BoxCollider2D>()) )
             {
-              
-                tileRB.velocity = new Vector2(0, 0);
-               // tileRB.bodyType = RigidbodyType2D.Dynamic;
-              //  tileRB.gravityScale = 1f;
-              //  tileRB.mass = 1000000;
-                //Destroy(tileRB);
-                //transform.parent = GameObject.Find("Tower").transform;
+                tileRB.velocity = Vector2.zero;
+                //tileRB.angularVelocity = 0f;
+                tileRB.bodyType = RigidbodyType2D.Dynamic;
+                tileRB.velocity = Vector2.zero;
+                tileRB.angularVelocity = 0f;
+                //tileRB.constraints = RigidbodyConstraints2D.FreezePositionY | RigidbodyConstraints2D.FreezeRotation;
+                tileRB.gravityScale = 1;
+                tileRB.mass = 1;
+                /*Destroy(tileRB);
+                towerRB.bodyType = RigidbodyType2D.Kinematic;
+                transform.parent = GameObject.Find("Tower").transform;
+                towerRB.velocity = Vector2.zero;
+                towerRB.bodyType = RigidbodyType2D.Dynamic;*/
                 done = true;
-               if (GameObject.Find("Player").transform.position.y >= Camera.main.transform.position.y)
-                Camera.main.transform.position = new Vector3(Camera.main.transform.position.x, transform.position.y, Camera.main.transform.position.z);
-                Debug.Log("TRUE\n");
             }
+        }
+        else if (Globals.gameOver)
+        {
+            tileRB.velocity = new Vector2(0, 0);
         }
     }
     /*

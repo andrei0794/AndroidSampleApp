@@ -5,7 +5,8 @@ using UnityEngine;
 public class Globals : MonoBehaviour {
 
     public static float minX, maxX, minY, maxY;
-
+    public static bool gameOver;
+    public static int tileCounter;
 	// Use this for initialization
 	void Start () {
 

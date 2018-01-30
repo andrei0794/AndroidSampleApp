@@ -4,16 +4,16 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour {
 
-    private Rigidbody2D _cata;
-    private BoxCollider2D _cataBC;
+    private Rigidbody2D playerRB;
+    private BoxCollider2D playerBC;
 
     private bool isGrounded;
 
 	// Use this for initialization
 	void Start () {
 
-        _cata = GetComponent<Rigidbody2D>();
-        _cataBC = GetComponent<BoxCollider2D>();
+        playerRB = GetComponent<Rigidbody2D>();
+        playerBC = GetComponent<BoxCollider2D>();
 
         isGrounded = true;
 
@@ -23,36 +23,35 @@ public class PlayerController : MonoBehaviour {
 	void Update () {
         if (isGrounded && Input.GetMouseButtonDown(0))
         {
-            _cata.AddForce(new Vector2(0, 3), ForceMode2D.Impulse);
+            playerRB.AddForce(new Vector2(0, 0.0006f), ForceMode2D.Impulse);
         }
 	}
 
     void OnCollisionEnter2D(Collision2D collision)
     {
-        Vector2 contactPoint = collision.contacts[0].point;
-        float offset = contactPoint.y - (_cataBC.transform.position.y + _cataBC.bounds.size.y / 2);
-        bool bottom =  offset < 0.1 || offset < -0.1 ;
-        /*
-        offset = contactPoint.x - (_cataBC.transform.position.x - _cataBC.bounds.size.x / 2);
-        bool left = offset < 0.1 || offset < -0.1;
-        offset = contactPoint.x - (_cataBC.transform.position.x + _cataBC.bounds.size.x / 2);
-        bool right = offset < 0.1 || offset < -0.1;
-        */
-        if (collision.gameObject.layer == 8 && bottom)
+        if (collision.contacts.Length > 0 && collision.gameObject.layer == 8)
         {
-            isGrounded = true;
+            ContactPoint2D contact = collision.contacts[0];
+            if (Vector3.Dot(contact.normal, Vector2.up) > 0.5)
+            {
+                isGrounded = true;
+            }
+            else if (Vector3.Dot(contact.normal, Vector2.right) > 0.5) //actually left
+            {
+                // Vector3 dir = Quaternion.AngleAxis(45, Vector3.forward) * Vector3.right;
+                //playerRB.AddForce(dir * 10);
+                playerRB.constraints = RigidbodyConstraints2D.None;
+                playerRB.AddForce(new Vector2(2,1), ForceMode2D.Impulse);
+                print("right");
+                Globals.gameOver = true;
+            }
+            else if (Vector3.Dot(contact.normal, Vector2.left) > 0.5) //actually right
+            {
+                playerRB.constraints = RigidbodyConstraints2D.None;
+                playerRB.AddForce(new Vector2(-2,1), ForceMode2D.Impulse);
+                Globals.gameOver = true;
+            }
         }
-        /*
-        else if (collision.gameObject.layer == 8 && left)
-        {
-            _cata.AddForce(new Vector2(3, 0.5f), ForceMode2D.Impulse);
-        }
-
-        else if (collision.gameObject.layer == 8 && right)
-        {
-            _cata.AddForce(new Vector2(-3, 0.5f), ForceMode2D.Impulse);
-        }
-        */
     }
     void OnCollisionExit2D(Collision2D collision)
     {
