@@ -10,12 +10,15 @@ public class GameController : MonoBehaviour {
 
     private BoxCollider2D lastTileBC;
     private Rigidbody2D lastTileRB;
+    private GameObject player;
 
     // Use this for initialization
     void Start () {
 
         Globals.gameOver = false;
         Globals.tileCounter = 0;
+
+        Globals.tileSpeed = 1.5f;
 
         float camDistance = Vector3.Distance(transform.position, Camera.main.transform.position);
         Vector2 bottomCorner = Camera.main.ViewportToWorldPoint(new Vector3(0, 0, camDistance));
@@ -35,6 +38,7 @@ public class GameController : MonoBehaviour {
         lastTile.GetComponent<TileController>().direction = 1;
         Globals.tileCounter++;
 
+        player = GameObject.Find("Player");
     }
 
     // Update is called once per frame
@@ -69,7 +73,8 @@ public class GameController : MonoBehaviour {
 
         if (Globals.gameOver)
         {
-            UnityEngine.Advertisements.Advertisement.Show();
+            if (player.transform.position.y < lastTile.transform.position.y - lastTileBC.bounds.size.y)
+                UnityEngine.Advertisements.Advertisement.Show();
         }
     }
 }

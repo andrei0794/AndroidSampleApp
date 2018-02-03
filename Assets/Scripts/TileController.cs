@@ -17,17 +17,19 @@ public class TileController : MonoBehaviour {
     private Rigidbody2D tileRB;
     private BoxCollider2D tileBC;
 
-    private float speed;
     private int last_count;
 
     private GameObject tower;
     private Rigidbody2D towerRB;
+
+    private GameObject player;
 
     // Use this for initialization
     void Start () {
         floor = GameObject.Find("Floor");
         floorBC = floor.GetComponent<BoxCollider2D>();
 
+        player = GameObject.Find("Player");
         done = false;
 
         tileRB = GetComponent<Rigidbody2D>();
@@ -45,7 +47,6 @@ public class TileController : MonoBehaviour {
             destination = new Vector3(floor.transform.position.x, gc.lastTile.transform.position.y , 0);
         }
 
-        speed = 2;
         last_count = 0;
 
         tower = GameObject.Find("Tower");
@@ -55,10 +56,11 @@ public class TileController : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
-        if (Globals.tileCounter > last_count + 5)
+        if (Globals.tileCounter > last_count + 2)
         {
             last_count = Globals.tileCounter;
-            speed = speed + 0.4f;
+            Globals.tileSpeed = Globals.tileSpeed + 0.01f;
+            player.GetComponent<PlayerController>().jumpForceUp += 0.00002f; 
         }
 
         if (done == false && !Globals.gameOver)
@@ -66,11 +68,11 @@ public class TileController : MonoBehaviour {
             //transform.position = Vector3.MoveTowards(transform.position, destination, 5 * Time.deltaTime);
             if (direction == 1)
             {
-                tileRB.velocity = transform.right * Random.Range(speed - 1, speed + 1);
+                tileRB.velocity = transform.right * Random.Range(Globals.tileSpeed - 0.2f, Globals.tileSpeed + 0.2f);   
             }
             else if (direction == 2)
             {
-                tileRB.velocity = - transform.right * Random.Range(speed - 1, speed + 1);
+                tileRB.velocity = - transform.right * Random.Range(Globals.tileSpeed - 0.2f, Globals.tileSpeed + 0.2f);
             }
             if ( tileBC.IsTouching(GameObject.Find("Player").GetComponent<BoxCollider2D>()) )
             {

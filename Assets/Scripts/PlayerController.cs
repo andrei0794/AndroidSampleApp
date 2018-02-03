@@ -9,6 +9,12 @@ public class PlayerController : MonoBehaviour {
 
     private bool isGrounded;
 
+    private float jumpPos;
+
+    public float jumpForceUp, jumpForceDown;
+
+    private float lastForceUsed;
+
 	// Use this for initialization
 	void Start () {
 
@@ -16,14 +22,22 @@ public class PlayerController : MonoBehaviour {
         playerBC = GetComponent<BoxCollider2D>();
 
         isGrounded = true;
-
+        jumpForceUp = 0.005f;
     }
 	
 	// Update is called once per frame
 	void Update () {
         if (isGrounded && Input.GetMouseButtonDown(0))
         {
-            playerRB.AddForce(new Vector2(0, 0.0006f), ForceMode2D.Impulse);
+            jumpPos = playerRB.position.y;
+            playerRB.AddForce(new Vector2(0, jumpForceUp), ForceMode2D.Impulse);
+            lastForceUsed = jumpForceUp;
+            //playerRB.velocity = new Vector2(playerRB.velocity.x, playerRB.velocity.y + 5f);        
+        }
+        else if (!isGrounded && playerRB.position.y > jumpPos + 1.5f)
+        {
+            jumpForceDown = lastForceUsed / 2;
+            playerRB.AddForce(new Vector2(0, -jumpForceDown), ForceMode2D.Impulse);
         }
 	}
 
@@ -38,18 +52,15 @@ public class PlayerController : MonoBehaviour {
             }
             else if (Vector3.Dot(contact.normal, Vector2.right) > 0.5) //actually left
             {
-                // Vector3 dir = Quaternion.AngleAxis(45, Vector3.forward) * Vector3.right;
-                //playerRB.AddForce(dir * 10);
-                playerRB.constraints = RigidbodyConstraints2D.None;
-                playerRB.AddForce(new Vector2(2,1), ForceMode2D.Impulse);
-                print("right");
                 Globals.gameOver = true;
+                playerRB.constraints = RigidbodyConstraints2D.None;
+                playerRB.AddForce(new Vector2(0.005f,0.005f), ForceMode2D.Impulse);        
             }
             else if (Vector3.Dot(contact.normal, Vector2.left) > 0.5) //actually right
             {
-                playerRB.constraints = RigidbodyConstraints2D.None;
-                playerRB.AddForce(new Vector2(-2,1), ForceMode2D.Impulse);
                 Globals.gameOver = true;
+                playerRB.constraints = RigidbodyConstraints2D.None;
+                playerRB.AddForce(new Vector2(-0.005f,0.005f), ForceMode2D.Impulse);          
             }
         }
     }
