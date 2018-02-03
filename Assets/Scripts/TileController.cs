@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class TileController : MonoBehaviour {
 
@@ -34,16 +35,14 @@ public class TileController : MonoBehaviour {
         tileRigidBody = GetComponent<Rigidbody2D>();
         tileBoxCollider = GetComponent<BoxCollider2D>();
 
-        gameController = GameObject.Find("GameController").GetComponent<GameController>();
-
         if (Globals.GetInstance()._tileCounter == 0)
         {
             destination = new Vector3(floor.transform.position.x, floor.transform.position.y , 0);
         }
         else
         {
-            BoxCollider2D lastTileBoxCollider = gameController.lastTile.GetComponent<BoxCollider2D>();
-            destination = new Vector3(floor.transform.position.x, gameController.lastTile.transform.position.y , 0);
+            BoxCollider2D lastTileBoxCollider = Globals.GetInstance()._lastTile.GetComponent<BoxCollider2D>();
+            destination = new Vector3(floor.transform.position.x, Globals.GetInstance()._lastTile.transform.position.y , 0);
         }
 
         last_count = 0;
@@ -66,17 +65,17 @@ public class TileController : MonoBehaviour {
         {
             if (direction == TileDirection._left)
             {
-                tileRigidBody.velocity = transform.right * Random.Range(Globals.GetInstance()._tileCurrentSpeed - Globals.TILE_SPEED_VARIATION,
+                tileRigidBody.velocity = transform.right * UnityEngine.Random.Range(Globals.GetInstance()._tileCurrentSpeed - Globals.TILE_SPEED_VARIATION,
                     Globals.GetInstance()._tileCurrentSpeed + Globals.TILE_SPEED_VARIATION);   
             }
             else if (direction == TileDirection._right)
             {
-                tileRigidBody.velocity = - transform.right * Random.Range(Globals.GetInstance()._tileCurrentSpeed - Globals.TILE_SPEED_VARIATION,
+                tileRigidBody.velocity = - transform.right * UnityEngine.Random.Range(Globals.GetInstance()._tileCurrentSpeed - Globals.TILE_SPEED_VARIATION,
                     Globals.GetInstance()._tileCurrentSpeed + Globals.TILE_SPEED_VARIATION);
             }
-            if ( tileBoxCollider.IsTouching(player.GetComponent<BoxCollider2D>()) )
+            if ( tileBoxCollider.IsTouching(player.GetComponent<BoxCollider2D>()))
             {
-                tileRigidBody.velocity = Vector2.zero;
+                tileRigidBody.velocity = new Vector2(0, -Globals.TILE_FALL_VELOCITY);
                 //tileRigidBody.angularVelocity = 0f;
                 //tileRigidBody.bodyType = RigidbodyType2D.Dynamic;
                 //tileRigidBody.velocity = Vector2.zero;
@@ -97,6 +96,19 @@ public class TileController : MonoBehaviour {
         else if (Globals.GetInstance()._gameOver)
         {
             tileRigidBody.velocity = new Vector2(0, 0);
+        }
+    }
+
+    void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.contacts.Length > 0 && collision.gameObject.tag == "Tile")
+        {
+            if (Math.Abs(tileRigidBody.transform.position.x - 
+                Globals.GetInstance()._lastTile.GetComponent<Rigidbody2D>().transform.position.x) <
+                Globals.GetInstance()._lastTile.GetComponent<BoxCollider2D>().bounds.size.x)
+            {
+                tileRigidBody.bodyType = RigidbodyType2D.Dynamic;
+            }
         }
     }
 }

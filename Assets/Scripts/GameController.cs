@@ -5,7 +5,6 @@ using UnityEngine.SceneManagement;
 
 public class GameController : MonoBehaviour {
     public GameObject tile;
-    public GameObject lastTile;
     private TileController lastTileController;
 
     private BoxCollider2D lastTileBoxCollider;
@@ -29,22 +28,22 @@ public class GameController : MonoBehaviour {
         Globals.GetInstance()._maxY = topCorner.y;
         
         /*Getting necessary components*/
-        lastTileBoxCollider = lastTile.GetComponent<BoxCollider2D>();
-        lastTileRigidBody = lastTile.GetComponent<Rigidbody2D>();
+        lastTileBoxCollider = Globals.GetInstance()._lastTile.GetComponent<BoxCollider2D>();
+        lastTileRigidBody = Globals.GetInstance()._lastTile.GetComponent<Rigidbody2D>();
         player = GameObject.Find("Player");
 
         /*Spawning the first tile*/
-        Vector2 spawnPosition = new Vector2(Globals.GetInstance()._minX, lastTile.transform.position.y + lastTileBoxCollider.bounds.size.y);
+        Vector2 spawnPosition = new Vector2(Globals.GetInstance()._minX, Globals.GetInstance()._lastTile.transform.position.y + lastTileBoxCollider.bounds.size.y);
         Quaternion spawnRotation = new Quaternion(0, 0, 0, 0);
-        lastTile = Instantiate(tile, spawnPosition, spawnRotation);
-        lastTile.GetComponent<TileController>().direction = TileDirection._left;
+        Globals.GetInstance()._lastTile = Instantiate(tile, spawnPosition, spawnRotation);
+        Globals.GetInstance()._lastTile.GetComponent<TileController>().direction = TileDirection._left;
         Globals.GetInstance()._tileCounter++;
     }
 
     // Update is called once per frame
     void Update() {
 
-        lastTileController = lastTile.GetComponent<TileController>();
+        lastTileController = Globals.GetInstance()._lastTile.GetComponent<TileController>();
         Vector2 spawnPosition;
         TileDirection directionLocal;
 
@@ -52,22 +51,22 @@ public class GameController : MonoBehaviour {
         {
             if (Random.Range(0.0f, 1.0f) > 0.5f)
             {
-                spawnPosition = new Vector2(Globals.GetInstance()._minX, lastTile.transform.position.y + lastTileBoxCollider.bounds.size.y);
+                spawnPosition = new Vector2(Globals.GetInstance()._minX, Globals.GetInstance()._lastTile.transform.position.y + lastTileBoxCollider.bounds.size.y);
                 directionLocal = TileDirection._left;
             }
             else
             {
-                spawnPosition = new Vector2(Globals.GetInstance()._maxX, lastTile.transform.position.y + lastTileBoxCollider.bounds.size.y);
+                spawnPosition = new Vector2(Globals.GetInstance()._maxX, Globals.GetInstance()._lastTile.transform.position.y + lastTileBoxCollider.bounds.size.y);
                 directionLocal = TileDirection._right;
             }
             Quaternion spawnRotation = new Quaternion(0, 0, 0, 0);
-            lastTile = Instantiate(tile, spawnPosition, spawnRotation);
-            lastTile.GetComponent<TileController>().direction = directionLocal;
+            Globals.GetInstance()._lastTile = Instantiate(tile, spawnPosition, spawnRotation);
+            Globals.GetInstance()._lastTile.GetComponent<TileController>().direction = directionLocal;
         }
 
         if (Globals.GetInstance()._gameOver)
         {
-            if (player.transform.position.y < lastTile.transform.position.y - lastTileBoxCollider.bounds.size.y)
+            if (player.transform.position.y < Globals.GetInstance()._lastTile.transform.position.y - lastTileBoxCollider.bounds.size.y)
                 UnityEngine.Advertisements.Advertisement.Show();
         }
     }

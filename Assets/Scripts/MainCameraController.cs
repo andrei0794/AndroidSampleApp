@@ -16,7 +16,7 @@ public class MainCameraController : MonoBehaviour {
             GameObject.Find("Player").transform.position.y >= Camera.main.transform.position.y + Globals.GetInstance()._maxY / 2)
         {
 
-            Vector3 destination = new Vector3(Camera.main.transform.position.x, gameController.lastTile.transform.position.y, Camera.main.transform.position.z);
+            Vector3 destination = new Vector3(Camera.main.transform.position.x, Globals.GetInstance()._lastTile.transform.position.y, Camera.main.transform.position.z);
             Camera.main.transform.position = Vector3.Lerp(Camera.main.transform.position, destination, 5 * Time.deltaTime);
         }
     }

@@ -24,12 +24,14 @@ public class Globals {
     public float _tileCurrentSpeed;
     public float _tileSpeedIncrement;
     public float _playerJumpForceIncrement;
+    public GameObject _lastTile;
 
     public const float TILE_START_SPEED = 1.5f;
     public const int TILE_NUMBER_DIFFICULTY_INCREMENT = 2;
     public const float TILE_SPEED_VARIATION = 0.02f;
     public const float PLAYER_PUSH_FORCE_X = 0.005f;
     public const float PLAYER_PUSH_FORCE_Y = 0.005f;
+    public const float TILE_FALL_VELOCITY = 1.5f;
 
     private Globals()
     {
