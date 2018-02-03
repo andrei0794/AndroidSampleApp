@@ -31,8 +31,7 @@ public class PlayerController : MonoBehaviour {
         {
             jumpPos = playerRB.position.y;
             playerRB.AddForce(new Vector2(0, jumpForceUp), ForceMode2D.Impulse);
-            lastForceUsed = jumpForceUp;
-            //playerRB.velocity = new Vector2(playerRB.velocity.x, playerRB.velocity.y + 5f);        
+            lastForceUsed = jumpForceUp;     
         }
         else if (!isGrounded && playerRB.position.y > jumpPos + 1.5f)
         {
@@ -52,15 +51,17 @@ public class PlayerController : MonoBehaviour {
             }
             else if (Vector3.Dot(contact.normal, Vector2.right) > 0.5) //actually left
             {
-                Globals.gameOver = true;
+                Globals.GetInstance()._gameOver = true;
                 playerRB.constraints = RigidbodyConstraints2D.None;
-                playerRB.AddForce(new Vector2(0.005f,0.005f), ForceMode2D.Impulse);        
+                playerRB.AddForce(new Vector2(Globals.PLAYER_PUSH_FORCE_X, Globals.PLAYER_PUSH_FORCE_Y), 
+                    ForceMode2D.Impulse);        
             }
             else if (Vector3.Dot(contact.normal, Vector2.left) > 0.5) //actually right
             {
-                Globals.gameOver = true;
+                Globals.GetInstance()._gameOver = true;
                 playerRB.constraints = RigidbodyConstraints2D.None;
-                playerRB.AddForce(new Vector2(-0.005f,0.005f), ForceMode2D.Impulse);          
+                playerRB.AddForce(new Vector2(-Globals.PLAYER_PUSH_FORCE_X, Globals.PLAYER_PUSH_FORCE_Y), 
+                    ForceMode2D.Impulse);          
             }
         }
     }

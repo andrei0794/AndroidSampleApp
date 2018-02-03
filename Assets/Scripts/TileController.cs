@@ -5,105 +5,98 @@ using UnityEngine;
 public class TileController : MonoBehaviour {
 
     public bool done;
-    public int direction; /* 1 - right, 2 - left*/
-
-    private GameObject floor;
-    private BoxCollider2D floorBC;
-
-    private GameController gc;
-
-    private Vector3 destination;
-
-    private Rigidbody2D tileRB;
-    private BoxCollider2D tileBC;
-
     private int last_count;
 
-    private GameObject tower;
-    private Rigidbody2D towerRB;
+    public TileDirection direction; 
 
+    private GameObject floor;
+    private GameObject tower;
     private GameObject player;
+
+    private BoxCollider2D floorBoxCollider;
+    private BoxCollider2D tileBoxCollider;
+
+    private Rigidbody2D towerRigidBody;
+    private Rigidbody2D tileRigidBody;
+
+    private GameController gameController;
+
+    private Vector3 destination;
 
     // Use this for initialization
     void Start () {
         floor = GameObject.Find("Floor");
-        floorBC = floor.GetComponent<BoxCollider2D>();
+        floorBoxCollider = floor.GetComponent<BoxCollider2D>();
 
         player = GameObject.Find("Player");
         done = false;
 
-        tileRB = GetComponent<Rigidbody2D>();
-        tileBC = GetComponent<BoxCollider2D>();
+        tileRigidBody = GetComponent<Rigidbody2D>();
+        tileBoxCollider = GetComponent<BoxCollider2D>();
 
-        gc = GameObject.Find("GameController").GetComponent<GameController>();
+        gameController = GameObject.Find("GameController").GetComponent<GameController>();
 
-        if (Globals.tileCounter == 0)
+        if (Globals.GetInstance()._tileCounter == 0)
         {
             destination = new Vector3(floor.transform.position.x, floor.transform.position.y , 0);
         }
         else
         {
-            BoxCollider2D lastTileBC = gc.lastTile.GetComponent<BoxCollider2D>();
-            destination = new Vector3(floor.transform.position.x, gc.lastTile.transform.position.y , 0);
+            BoxCollider2D lastTileBoxCollider = gameController.lastTile.GetComponent<BoxCollider2D>();
+            destination = new Vector3(floor.transform.position.x, gameController.lastTile.transform.position.y , 0);
         }
 
         last_count = 0;
 
         tower = GameObject.Find("Tower");
-        towerRB = GetComponent<Rigidbody2D>();
+        towerRigidBody = GetComponent<Rigidbody2D>();
     }
 	
 	// Update is called once per frame
 	void Update () {
 
-        if (Globals.tileCounter > last_count + 2)
+        if (Globals.GetInstance()._tileCounter > last_count + Globals.TILE_NUMBER_DIFFICULTY_INCREMENT)
         {
-            last_count = Globals.tileCounter;
-            Globals.tileSpeed = Globals.tileSpeed + 0.01f;
-            player.GetComponent<PlayerController>().jumpForceUp += 0.00002f; 
+            last_count = Globals.GetInstance()._tileCounter;
+            Globals.GetInstance()._tileCurrentSpeed = Globals.GetInstance()._tileCurrentSpeed + Globals.GetInstance()._tileSpeedIncrement;
+            player.GetComponent<PlayerController>().jumpForceUp += Globals.GetInstance()._playerJumpForceIncrement; 
         }
 
-        if (done == false && !Globals.gameOver)
+        if (done == false && !Globals.GetInstance()._gameOver)
         {
-            //transform.position = Vector3.MoveTowards(transform.position, destination, 5 * Time.deltaTime);
-            if (direction == 1)
+            if (direction == TileDirection._left)
             {
-                tileRB.velocity = transform.right * Random.Range(Globals.tileSpeed - 0.2f, Globals.tileSpeed + 0.2f);   
+                tileRigidBody.velocity = transform.right * Random.Range(Globals.GetInstance()._tileCurrentSpeed - Globals.TILE_SPEED_VARIATION,
+                    Globals.GetInstance()._tileCurrentSpeed + Globals.TILE_SPEED_VARIATION);   
             }
-            else if (direction == 2)
+            else if (direction == TileDirection._right)
             {
-                tileRB.velocity = - transform.right * Random.Range(Globals.tileSpeed - 0.2f, Globals.tileSpeed + 0.2f);
+                tileRigidBody.velocity = - transform.right * Random.Range(Globals.GetInstance()._tileCurrentSpeed - Globals.TILE_SPEED_VARIATION,
+                    Globals.GetInstance()._tileCurrentSpeed + Globals.TILE_SPEED_VARIATION);
             }
-            if ( tileBC.IsTouching(GameObject.Find("Player").GetComponent<BoxCollider2D>()) )
+            if ( tileBoxCollider.IsTouching(player.GetComponent<BoxCollider2D>()) )
             {
-                tileRB.velocity = Vector2.zero;
-                //tileRB.angularVelocity = 0f;
-                //tileRB.bodyType = RigidbodyType2D.Dynamic;
-                //tileRB.velocity = Vector2.zero;
-                //tileRB.angularVelocity = 0f;
-                //tileRB.constraints = RigidbodyConstraints2D.FreezePositionY | RigidbodyConstraints2D.FreezeRotation;
-                //tileRB.gravityScale = 1;
-                //tileRB.mass = 1;
-                /*Destroy(tileRB);
-                towerRB.bodyType = RigidbodyType2D.Kinematic;
+                tileRigidBody.velocity = Vector2.zero;
+                //tileRigidBody.angularVelocity = 0f;
+                //tileRigidBody.bodyType = RigidbodyType2D.Dynamic;
+                //tileRigidBody.velocity = Vector2.zero;
+                //tileRigidBody.angularVelocity = 0f;
+                //tileRigidBody.constraints = RigidbodyConstraints2D.FreezePositionY | RigidbodyConstraints2D.FreezeRotation;
+                //tileRigidBody.gravityScale = 1;
+                //tileRigidBody.mass = 1;
+                /*Destroy(tileRigidBody);
+                towerRigidBody.bodyType = RigidbodyType2D.Kinematic;
                 transform.parent = GameObject.Find("Tower").transform;
-                towerRB.velocity = Vector2.zero;
-                towerRB.bodyType = RigidbodyType2D.Dynamic;*/
+                towerRigidBody.velocity = Vector2.zero;
+                towerRigidBody.bodyType = RigidbodyType2D.Dynamic;*/
                 done = true;
+
+                Globals.GetInstance()._tileCounter++; 
             }
         }
-        else if (Globals.gameOver)
+        else if (Globals.GetInstance()._gameOver)
         {
-            tileRB.velocity = new Vector2(0, 0);
+            tileRigidBody.velocity = new Vector2(0, 0);
         }
     }
-    /*
-    void OnCollisionEnter(Collision collision)
-    {
-        if (collision.gameObject == GameObject.Find("Player"))
-        {
-            tileRB.velocity = new Vector2(0, 0);
-            done = true;
-        }
-    }*/
 }
