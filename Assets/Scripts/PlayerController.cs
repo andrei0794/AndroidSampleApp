@@ -4,21 +4,19 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour {
 
-    private Rigidbody2D playerRB;
+    public float jumpForceUp, jumpForceDown;
+
+    private Rigidbody2D playerRigidBody;
     private BoxCollider2D playerBC;
 
     private bool isGrounded;
-
     private float jumpPos;
-
-    public float jumpForceUp, jumpForceDown;
-
     private float lastForceUsed;
 
 	// Use this for initialization
 	void Start () {
 
-        playerRB = GetComponent<Rigidbody2D>();
+        playerRigidBody = GetComponent<Rigidbody2D>();
         playerBC = GetComponent<BoxCollider2D>();
 
         isGrounded = true;
@@ -29,14 +27,14 @@ public class PlayerController : MonoBehaviour {
 	void Update () {
         if (isGrounded && Input.GetMouseButtonDown(0))
         {
-            jumpPos = playerRB.position.y;
-            playerRB.AddForce(new Vector2(0, jumpForceUp), ForceMode2D.Impulse);
+            jumpPos = playerRigidBody.position.y;
+            playerRigidBody.AddForce(new Vector2(0, jumpForceUp), ForceMode2D.Impulse);
             lastForceUsed = jumpForceUp;     
         }
-        else if (!isGrounded && playerRB.position.y > jumpPos + 1.5f)
+        else if (!isGrounded && playerRigidBody.position.y > jumpPos + 1.5f)
         {
             jumpForceDown = lastForceUsed / 2;
-            playerRB.AddForce(new Vector2(0, -jumpForceDown), ForceMode2D.Impulse);
+            playerRigidBody.AddForce(new Vector2(0, -jumpForceDown), ForceMode2D.Impulse);
         }
 	}
 
@@ -45,6 +43,7 @@ public class PlayerController : MonoBehaviour {
         if (collision.contacts.Length > 0 && collision.gameObject.layer == 8)
         {
             ContactPoint2D contact = collision.contacts[0];
+
             if (Vector3.Dot(contact.normal, Vector2.up) > 0.5)
             {
                 isGrounded = true;
@@ -52,15 +51,15 @@ public class PlayerController : MonoBehaviour {
             else if (Vector3.Dot(contact.normal, Vector2.right) > 0.5) //actually left
             {
                 Globals.GetInstance()._gameOver = true;
-                playerRB.constraints = RigidbodyConstraints2D.None;
-                playerRB.AddForce(new Vector2(Globals.PLAYER_PUSH_FORCE_X, Globals.PLAYER_PUSH_FORCE_Y), 
+                playerRigidBody.constraints = RigidbodyConstraints2D.None;
+                playerRigidBody.AddForce(new Vector2(Globals.PLAYER_PUSH_FORCE_X, Globals.PLAYER_PUSH_FORCE_Y), 
                     ForceMode2D.Impulse);        
             }
             else if (Vector3.Dot(contact.normal, Vector2.left) > 0.5) //actually right
             {
                 Globals.GetInstance()._gameOver = true;
-                playerRB.constraints = RigidbodyConstraints2D.None;
-                playerRB.AddForce(new Vector2(-Globals.PLAYER_PUSH_FORCE_X, Globals.PLAYER_PUSH_FORCE_Y), 
+                playerRigidBody.constraints = RigidbodyConstraints2D.None;
+                playerRigidBody.AddForce(new Vector2(-Globals.PLAYER_PUSH_FORCE_X, Globals.PLAYER_PUSH_FORCE_Y), 
                     ForceMode2D.Impulse);          
             }
         }

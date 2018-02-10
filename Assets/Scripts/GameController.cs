@@ -6,6 +6,8 @@ using UnityEngine.SceneManagement;
 public class GameController : MonoBehaviour {
     public GameObject tile;
     public GameObject lastTile;
+    public GameObject lastStackedTile;
+
     private TileController lastTileController;
 
     private BoxCollider2D lastTileBoxCollider;
@@ -34,7 +36,7 @@ public class GameController : MonoBehaviour {
         player = GameObject.Find("Player");
 
         /*Spawning the first tile*/
-        Vector2 spawnPosition = new Vector2(Globals.GetInstance()._minX, lastTile.transform.position.y + lastTileBoxCollider.bounds.size.y);
+        Vector2 spawnPosition = new Vector2(Globals.GetInstance()._minX, lastTile.transform.position.y + lastTileBoxCollider.bounds.size.y + 0.03f);
         Quaternion spawnRotation = new Quaternion(0, 0, 0, 0);
         lastTile = Instantiate(tile, spawnPosition, spawnRotation);
         lastTile.GetComponent<TileController>().direction = TileDirection._left;
@@ -52,12 +54,12 @@ public class GameController : MonoBehaviour {
         {
             if (Random.Range(0.0f, 1.0f) > 0.5f)
             {
-                spawnPosition = new Vector2(Globals.GetInstance()._minX, lastTile.transform.position.y + lastTileBoxCollider.bounds.size.y);
+                spawnPosition = new Vector2(Globals.GetInstance()._minX, lastTile.transform.position.y + lastTileBoxCollider.bounds.size.y + 0.03f);
                 directionLocal = TileDirection._left;
             }
             else
             {
-                spawnPosition = new Vector2(Globals.GetInstance()._maxX, lastTile.transform.position.y + lastTileBoxCollider.bounds.size.y);
+                spawnPosition = new Vector2(Globals.GetInstance()._maxX, lastTile.transform.position.y + lastTileBoxCollider.bounds.size.y + 0.03f);
                 directionLocal = TileDirection._right;
             }
             Quaternion spawnRotation = new Quaternion(0, 0, 0, 0);
@@ -68,7 +70,10 @@ public class GameController : MonoBehaviour {
         if (Globals.GetInstance()._gameOver)
         {
             if (player.transform.position.y < lastTile.transform.position.y - lastTileBoxCollider.bounds.size.y)
+            {
                 UnityEngine.Advertisements.Advertisement.Show();
+                SceneManager.LoadScene(0);
+            }
         }
     }
 }
